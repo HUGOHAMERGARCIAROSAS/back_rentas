@@ -1,12 +1,31 @@
 // configurar mi base de datos con mssql
 
-const mssql = require('mssql');
+const sql = require('mssql');
+require('dotenv').config();
 
 const config = {
-    user: 'sa',
-    password: '123456',
-    server: 'localhost',
-    database: 'rentas'
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    server: process.env.DB_SERVER,
+    database: process.env.DB_DATABASE,
+    options: {
+        encrypt: false, 
+        trustServerCertificate: true, 
+        port: 1433,
+        instanceName: process.env.DB_INSTANCE,
+    }
 }
 
-module.exports = new mssql.ConnectionPool(config);
+async function connectToDatabase() {
+    try {
+        await sql.connect(config);
+        console.log('Database connected');
+    } catch (err) {
+        console.error('Error connecting to database:', err.message);
+    }
+}
+
+module.exports = {
+    connectToDatabase,
+    sql
+};

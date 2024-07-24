@@ -1,26 +1,31 @@
 // crear estructura basica de express
 
 const express = require('express');
-const cors = require('cors');
+const { connectToDatabase } = require('./config/database'); // Asegúrate de que la ruta sea correcta
+
+
 
 const app = express();
-app.use(cors());
+const routes = require('./routes');
 
-app.get('/', (req, res) => {
-    res.send('Hello World!');
+
+// Conectar a la base de datos
+connectToDatabase();
+
+// Resto de la configuración de Express y rutas...
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
 
-app.get('/hello', (req, res) => {
-    res.send('Hello World!');
-});
 
-// definir el puerto 
-app.listen(3000, () => {
-    console.log('Server running on port 3000');
-});
+app.use(express.json()); // Middleware para parsear JSON
+app.use(routes); // Usar todas las rutas definidas
 
-
-module.exports = app;
-
-
+// Middleware de manejo de errores
+// app.use((err, req, res, next) => {
+//     console.error(err.stack);
+//     res.status(500).send('Something broke!');
+// });
 
