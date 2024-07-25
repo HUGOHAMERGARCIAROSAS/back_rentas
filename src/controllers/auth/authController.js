@@ -43,7 +43,7 @@ const login = async (req, res) => {
     }
 
     const token = generateToken(user.per_codigo);
-    return res.status(200).json({ token });
+    return res.status(200).json({ token, user });
   } catch (err) {
     console.error("Error during login:", err.message);
     console.error("Error stack trace:", err.stack);
