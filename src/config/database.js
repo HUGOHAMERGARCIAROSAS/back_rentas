@@ -9,8 +9,8 @@ const config = {
     server: process.env.DB_SERVER,
     database: process.env.DB_DATABASE,
     options: {
-        encrypt: false, 
-        trustServerCertificate: true, 
+        encrypt: false,
+        trustServerCertificate: true,
         port: 1433,
         instanceName: process.env.DB_INSTANCE,
     }
