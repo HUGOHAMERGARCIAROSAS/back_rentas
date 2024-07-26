@@ -26,13 +26,13 @@ const login = async (req, res) => {
     const pool = await sql.connect(config);
 
     const request = pool.request();
-    request.input("PerLogin", sql.VarChar(20), per_login);
-
-    const result = await request.query(
-      "SELECT * FROM usuario WHERE per_login = @PerLogin"
+    request.input("per_login", sql.VarChar(20), per_login);
+    request.input("tipo", sql.Int, 1);
+    const result = await request.execute(
+      'sp_usuario'
     );
 
-    const user = result.recordset[0];
+    const user = result?.recordset[0];
     if (!user) {
       return res.status(401).send('Invalid email or password 1');
     }
@@ -41,6 +41,8 @@ const login = async (req, res) => {
     if (!isMatch) {
       return res.status(401).send('Invalid email or password 2');
     }
+
+    delete user.password;
 
     const token = generateToken(user.per_codigo);
     return res.status(200).json({ token, user });
