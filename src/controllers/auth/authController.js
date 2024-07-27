@@ -20,7 +20,7 @@ const login = async (req, res) => {
 
     const { per_login, password } = req.body;
     if (!per_login || !password) {
-      return res.status(400).send('All input is required');
+      return res.status(400).send('Todos los campos son requeridos.');
     }
 
     const pool = await sql.connect(config);
@@ -33,13 +33,14 @@ const login = async (req, res) => {
     );
 
     const user = result?.recordset[0];
+
     if (!user) {
-      return res.status(401).send('Invalid email or password 1');
+      return res.status(401).send('Usuario no encontrado.');
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(401).send('Invalid email or password 2');
+      return res.status(401).send('Usuario o contraseña incorrectos.');
     }
 
     delete user.password;
@@ -47,9 +48,7 @@ const login = async (req, res) => {
     const token = generateToken(user.per_codigo);
     return res.status(200).json({ token, user });
   } catch (err) {
-    console.error("Error during login:", err.message);
-    console.error("Error stack trace:", err.stack);
-    return res.status(500).send("Internal Server Error");
+    return res.status(500).send("Error interno del servidor.");
   }
 };
 

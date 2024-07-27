@@ -5,7 +5,7 @@ const verifyToken = (req, res, next) => {
     const token = req.header('Authorization').replace('Bearer ', '');
 
     if (!token) {
-        return res.status(401).send('Access denied. No token provided.');
+        return res.status(401).send('Acceso Denegado.');
     }
 
     try {
@@ -13,7 +13,7 @@ const verifyToken = (req, res, next) => {
         req.user = decoded;
         next();
     } catch (ex) {
-        res.status(400).send('Invalid token.');
+        res.status(400).send('Token Invalido.');
     }
 };
 
